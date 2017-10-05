@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 from torch.autograd import Variable as V
 import torchvision.models as models
 from torchvision import transforms as trn
@@ -58,7 +59,7 @@ class Places:
         self.classes = tuple(self.classes)
 
     def get_classifications(self,img_directory):
-        img_directory = 'test_images/classroom1/*.jpg'
+        img_directory = 'test_images/hallway1/*.jpg'
         
         filenames = []
         
@@ -67,6 +68,14 @@ class Places:
 
         filenames = sorted(filenames)
         self.total_images = len(filenames)
+
+        categories_turtlebot = ['classroom', 'office', 'corridor', 'conference_room', 'kitchen']
+        best_categories = np.zeros([len(categories_turtlebot), 1])
+        count = 0
+        # For storing running categories
+        run_length = 10
+        best_category_order = np.array([],dtype='int64')
+        max_occurrence = np.array([],dtype='int64')
 
         for file_idx, filename in enumerate(filenames):
 
@@ -83,10 +92,51 @@ class Places:
 
             # output the prediction
             print filename
-            for i in range(0, 5):
-                print('{:.3f} -> {}'.format(probs[i], self.classes[idx[i]]))
+
+            # test_probs: Probability of categories_turtlebot for each image
+            test_probs = np.array([])
+            # test_categories: Corresponding classes to test_probs' probabilities
+            test_categories = []
+
+            # Loop through all 365 classes
+            for i in range(0, 365):
+            	# Check if each of the 365 classes is in categories_turtlebot
+            	if self.classes[idx[i]] in categories_turtlebot: 
+            		# Print probability of each class. Example: 0.5 -> kitchen
+                    print('{:.3f} -> {}'.format(probs[i], self.classes[idx[i]]))
+                    # appends each class's probability and each class to test_probs and test_categories
+                    test_probs = np.append(test_probs, probs[i])
+                    test_categories.append(self.classes[idx[i]])
                 self.classifications[file_idx, i] = self.classes[idx[i]]
+
+            # Get the index of the max prob
+            idx_max = np.argmax(test_probs)
+            # Pull out the corresponding class
+            best_category = test_categories[idx_max]
+            # Sorts the classes based on probabilities
+            # best_category_order.append(best_category)
+
+            print 'Best category: ' + best_category
             print '_________________________________'
+
+            # Keeps a running probability of each class being printed. Ex: If kitchen gets predicted 6/10 times, it's value = 0.6
+            best_categories[categories_turtlebot.index(best_category)] += 1
+            print np.int64(categories_turtlebot.index(best_category))
+            best_category_order = np.append(best_category_order, np.int64(categories_turtlebot.index(best_category)))
+            if len(best_category_order) >= run_length:
+            	# print np.bincount(best_category_order)
+            	max_occurrence = np.append(max_occurrence, np.argmax(np.bincount(best_category_order)))
+            	best_category_order = best_category_order[1:]
+            count += 1
+            # print best_categories[0] 
+            # print categories_turtlebot.index(best_category)
+
+        print best_categories
+        print max_occurrence
+        print categories_turtlebot
+        print np.bincount(max_occurrence)
+
+
 
     def print_time_per_img(self): 
         time_per_image = self.elapsed_time/self.total_images
