@@ -1,0 +1,2 @@
+image_converter
+-DCATKIN_DEVEL_PREFIX=/home/servicerobot2/scene_recognition/test/devel -DCMAKE_INSTALL_PREFIX=/home/servicerobot2/scene_recognition/test/install -G Unix Makefiles

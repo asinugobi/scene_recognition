@@ -1,0 +1,8 @@
+prefix=/home/servicerobot2/scene_recognition/test/install
+
+Name: image_converter
+Description: Description of image_converter
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/servicerobot2/scene_recognition/test/install/lib 
+Requires: 

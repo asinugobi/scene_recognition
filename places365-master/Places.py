@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 from torch.autograd import Variable as V
-import torchvision.models as models
+# import torchvision.models as models
 from torchvision import transforms as trn
 from torch.nn import functional as F
 import os
@@ -9,8 +9,6 @@ from PIL import Image
 
 import os, sys, glob
 import time
-
-
 
 
 class Places: 
@@ -59,7 +57,7 @@ class Places:
         self.classes = tuple(self.classes)
 
     def get_classifications(self,img_directory):
-        img_directory = 'test_images/hallway1/*.jpg'
+        img_directory = 'test_images/office2/*.jpg'
         
         filenames = []
         
@@ -131,12 +129,12 @@ class Places:
             # print best_categories[0] 
             # print categories_turtlebot.index(best_category)
 
-        print best_categories
-        print max_occurrence
-        print categories_turtlebot
+        print "Best Categories: ",best_categories
+        print "Max Occurence: ",max_occurrence
+        print "Categories Turtlebot: ",categories_turtlebot
         print np.bincount(max_occurrence)
 
-
+        return best_category
 
     def print_time_per_img(self): 
         time_per_image = self.elapsed_time/self.total_images
