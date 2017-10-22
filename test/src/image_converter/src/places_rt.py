@@ -91,7 +91,7 @@ class places_rt:
             	# Check if each of the 365 classes is in categories_turtlebot
             	if self.classes[idx[i]] in categories_turtlebot:
             		# Print probability of each class. Example: 0.5 -> kitchen
-                    print('{:.3f} -> {}'.format(probs[i], self.classes[idx[i]]))
+                   # print('{:.3f} -> {}'.format(probs[i], self.classes[idx[i]]))
                     # appends each class's probability and each class to test_probs and test_categories
                     test_probs = np.append(test_probs, probs[i])
                     test_categories.append(self.classes[idx[i]])
@@ -104,7 +104,7 @@ class places_rt:
 
             # Sorts the classes based on probabilities
             # best_category_order.append(best_category)
-            print 'Best category: ' + best_category
+            #print 'Best category: ' + best_category
             # print '_________________________________'
 
             # Keeps a running probability of each class being printed. Ex: If kitchen gets predicted 6/10 times, it's value = 0.6
@@ -113,7 +113,7 @@ class places_rt:
 
         best_categories = best_categories/len(image_list)
         idx_max = np.argmax(best_categories)
-        print '--------------------'
+        #print '--------------------'
         return categories_turtlebot[idx_max]
 
     def print_time_per_img(self):

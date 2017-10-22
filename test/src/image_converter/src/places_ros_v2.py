@@ -47,34 +47,33 @@ class scene_recognition:
 
     def __init__(self):
         # self.category_pub = rospy.publishedisher()
+        self.images = []
         self.bridge = CvBridge()
         self.image_sub = rospy.Subscriber("/camera/rgb/image_color/compressed", CompressedImage,self.callback, queue_size=1, buff_size=2**24)
 
     def callback(self, data):
-        rospy.loginfo(rospy.get_caller_id() + ' Subscribed.')
+#        rospy.loginfo(rospy.get_caller_id() + ' Subscribed.')
         img = data.data
-        images = []
 
-        while len(images) <= 9:
+        if len(self.images) <= 9:
             cv_image = self.bridge.compressed_imgmsg_to_cv2(data,'bgr8')
-            images.append(cv_image)
-            print len(images)
+            self.images.append(cv_image)
+#            print len(self.images)
+        else:
+            self.predict_scene()
+            self.images = []
 
-        # prediction = pr.get_classifications(images)
+    def predict_scene(self):
         predictor = pr.places_rt('resnet18', 0)
-        prediction = predictor.get_classifications(images)
-        print "Scene predication:", prediction
-
-        # clear image array
-        images = []
-
+        prediction = predictor.get_classifications(self.images)
+        print "Scene prediction:", prediction
+        self.images = []
 
 if __name__ == '__main__':
     scene_recognition = scene_recognition()
     rospy.init_node('scene_recognition', anonymous=True)
 
     try:
-        print 'hello'
         rospy.spin()
     except KeyboardInterrupt:
         print("Shutting down")
