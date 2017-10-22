@@ -9,6 +9,7 @@ from torchvision import transforms as trn
 from torch.nn import functional as F
 import os
 from PIL import Image
+import pdb
 
 import os, sys, glob
 import time
@@ -34,6 +35,9 @@ else:
     model = torch.load(model_weight, map_location=lambda storage, loc: storage) # model trained in GPU could be deployed in CPU machine like this!
 
 model.eval()
+
+print model 
+# pdb.set_trace()
 
 # load the image transformer
 centre_crop = trn.Compose([

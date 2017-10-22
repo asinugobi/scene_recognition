@@ -1,0 +1,10 @@
+<launch>
+	<!-- Turtlebot Bringup Launch --> 
+	<include file="(find turtlebot)/path/filename.xml" />
+	
+	<!-- Kinect Launch --> 
+	<include file="(find kinect)/path/filename.xml" /> 
+
+	<!-- Launch the scene recognition node --> 
+	<node name="scene_recognition" pkg="image_converter" type="places_ros.py" />
+</launch>
